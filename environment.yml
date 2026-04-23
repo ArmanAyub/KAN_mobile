@@ -1,0 +1,25 @@
+name: kan-human-env
+channels:
+  - pytorch
+  - nvidia          # Added for CUDA libraries
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - pytorch
+  - torchvision
+  - torchaudio
+  - pytorch-cuda=11.8
+  - pip
+  - pip:
+    - PyYAML
+    - git+https://github.com/ZiyaoLi/fast-kan.git
+    - wandb
+    - gradio
+    - matplotlib
+    - numpy
+    - opencv-python
+    - pillow
+    - tqdm
+    - scikit-learn
+    - ipykernel

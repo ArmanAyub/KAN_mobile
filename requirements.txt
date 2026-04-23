@@ -1,0 +1,12 @@
+PyYAML
+torch
+torchvision
+git+https://github.com/ZiyaoLi/fast-kan.git
+wandb
+gradio
+matplotlib
+numpy
+opencv-python
+pillow
+tqdm
+scikit-learn

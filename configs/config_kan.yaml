@@ -1,0 +1,20 @@
+# KAN Configuration
+dataset:
+  data_dir: "data"
+  image_size: 224
+  batch_size: 32
+  train_split: 0.8
+
+model:
+  type: "kan"
+  hidden_dim: 64
+  backbone: "mobilenet_v2"
+
+train:
+  epochs: 10
+  lr: 0.001
+
+logging:
+  project_name: "kan-human-classifier"
+  save_dir: "models"
+  log_images: true
