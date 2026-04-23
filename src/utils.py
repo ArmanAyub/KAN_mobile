@@ -64,8 +64,7 @@ def save_kan_curves(model, save_dir="results", grid_range=(-1, 1), num_points=10
     kan_layer = None
     for module in model.modules():
         if type(module).__name__ == 'FastKANLayer':
-            kan_layer = module
-            break
+            kan_layer = module  # keep updating — ends on the last layer
 
     if kan_layer is None:
         print("No FastKANLayer found.")
@@ -108,11 +107,12 @@ def save_kan_curves(model, save_dir="results", grid_range=(-1, 1), num_points=10
                 ax.set_visible(False)
 
             axes[0].legend(fontsize=8)
-            class_name = ["Human", "Non-Human"][out_idx]
-            fig.suptitle(f"KAN Learned Activation Curves — Output: {class_name}", fontsize=13, fontweight='bold')
+            class_names = ["Human", "Non-Human"]
+            out_label = class_names[out_idx] if out_idx < len(class_names) else f"Unit {out_idx}"
+            fig.suptitle(f"KAN Learned Activation Curves — Output: {out_label}", fontsize=13, fontweight='bold')
             plt.tight_layout()
 
-            path = os.path.join(save_dir, f"kan_curves_output_{out_idx}_{class_name.lower().replace('-', '_')}.png")
+            path = os.path.join(save_dir, f"kan_curves_output_{out_idx}_{out_label.lower().replace('-', '_').replace(' ', '_')}.png")
             fig.savefig(path, dpi=150, bbox_inches='tight')
             plt.close(fig)
             print(f"Saved: {path}")
