@@ -32,6 +32,9 @@ class MainActivity : AppCompatActivity() {
 
     private val isProcessing = AtomicBoolean(false)
 
+    private val WINDOW_SIZE = 7
+    private val labelWindow = ArrayDeque<String>(WINDOW_SIZE)
+
     private val cameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
@@ -116,12 +119,20 @@ class MainActivity : AppCompatActivity() {
             val result = kanInferencer?.infer(bitmap)
 
             result?.let {
+                if (labelWindow.size >= WINDOW_SIZE) labelWindow.removeFirst()
+                labelWindow.addLast(it.label)
+
+                val smoothedLabel = labelWindow
+                    .groupingBy { l -> l }
+                    .eachCount()
+                    .maxByOrNull { e -> e.value }!!.key
+
                 runOnUiThread {
                     val pct = "%.1f%%".format(it.confidence * 100f)
-                    labelText.text      = it.label
+                    labelText.text      = smoothedLabel
                     confidenceText.text = "Confidence: $pct"
 
-                    val humanConf = if (it.label == "HUMAN") it.confidence else 1f - it.confidence
+                    val humanConf = if (smoothedLabel == "HUMAN") it.confidence else 1f - it.confidence
                     visualizerView.update(it.hiddenActivations, humanConf)
                 }
             }
