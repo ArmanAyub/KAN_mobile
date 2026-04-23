@@ -2,6 +2,7 @@
 
 [![W&B](https://img.shields.io/badge/Weights_%26_Biases-FFBE00?logo=weightsandbiases&logoColor=white)](https://wandb.ai)
 [![FastKAN](https://img.shields.io/badge/Fast--KAN-Interpretable-blue)](https://github.com/ZiyaoLi/fast-kan)
+[![HF Space](https://img.shields.io/badge/🤗%20Space-Live%20Demo-yellow)](https://huggingface.co/spaces/armanmayub/KAN-mobile)
 
 A binary vision classifier using **FastKAN** (Kolmogorov-Arnold Networks) for human/non-human detection. This project compares a standard MLP head against a FastKAN head — both on a frozen MobileNetV2 backbone — with a focus on **interpretability**: KAN learns a unique activation curve per edge that can be visualized and inspected, unlike the fixed activations in a standard MLP.
 
