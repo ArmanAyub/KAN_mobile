@@ -1,0 +1,13 @@
+{
+    "model": "baseline",
+    "trainable_parameters": 2562,
+    "best_val_acc": 100.0,
+    "best_val_mAP": 1.0,
+    "best_val_f1": 1.0,
+    "test_acc": 99.92655159750275,
+    "test_mAP": 0.999995670795822,
+    "test_f1": 0.999236641221374,
+    "test_precision": 0.9984744469870328,
+    "test_recall": 1.0,
+    "test_lat_ms": 2.7076711430568103
+}

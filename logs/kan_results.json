@@ -1,0 +1,13 @@
+{
+    "model": "kan",
+    "trainable_parameters": null,
+    "best_val_acc": 100.0,
+    "best_val_mAP": 1.0,
+    "best_val_f1": 1.0,
+    "test_acc": 99.59603378626515,
+    "test_mAP": 0.9999886491585703,
+    "test_f1": 0.99581589958159,
+    "test_precision": 0.9916666666666667,
+    "test_recall": 1.0,
+    "test_lat_ms": 1.9194633634977563
+}

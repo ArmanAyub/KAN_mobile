@@ -28,9 +28,6 @@ env/
 venv/
 .venv/
 
-# Logs (auto-generated)
-logs/
-
 # Claude Code settings
 .claude/
 

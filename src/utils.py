@@ -24,14 +24,15 @@ def plot_kan_curves(model, input_idx=0, output_idx=0, grid_range=(-1, 1), num_po
     x = torch.linspace(grid_range[0], grid_range[1], num_points).to(next(model.parameters()).device)
     
     with torch.no_grad():
-        out_dim, in_dim = kan_layer.base_weight.shape
-        input_idx = min(input_idx, in_dim - 1)
+        in_dim  = kan_layer.input_dim
+        out_dim = kan_layer.base_linear.weight.shape[0]
+        input_idx  = min(input_idx,  in_dim  - 1)
         output_idx = min(output_idx, out_dim - 1)
 
-        # 1. Base contribution (SiLU)
-        base_act = nn.functional.silu(x)
-        w_base = kan_layer.base_weight[output_idx, input_idx]
-        y_base = w_base * base_act
+        # 1. Base contribution (learned base_activation, default SiLU)
+        base_act = kan_layer.base_activation(x)
+        w_base   = kan_layer.base_linear.weight[output_idx, input_idx]
+        y_base   = w_base * base_act
 
         # 2. Total layer output via one-hot style input (vary one dim at a time)
         input_vec = torch.zeros(num_points, in_dim).to(x.device)
