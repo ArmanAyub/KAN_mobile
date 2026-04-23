@@ -91,7 +91,22 @@ python src/demo.py
 ```
 
 ## 📤 ONNX Export
-Export the trained KAN model for edge deployment:
+
+Two variants are available depending on the deployment target:
+
+| Variant | Output | Use case |
+|---------|--------|----------|
+| Standard | `logits [2]` | HF Space, general inference |
+| With hidden | `logits [2]` + `hidden [64]` | Android live visualizer |
+
 ```bash
+# Standard — for HF Space or general inference
 python src/onnx_export.py --model-path models/kan_best.pth
+
+# With hidden activations — for Android live KAN visualizer
+python src/onnx_export.py --model-path models/kan_best.pth \
+    --with-hidden --output-path models/kan_model_android.onnx
 ```
+
+The `hidden` output contains the 64-dimensional activations from the first
+FastKAN layer, used to drive the real-time signal visualizer in the Android app.

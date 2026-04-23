@@ -28,6 +28,9 @@ env/
 venv/
 .venv/
 
+# HF Space (managed as separate git repo, pushed to huggingface.co)
+hf_space/
+
 # Claude Code settings
 .claude/
 

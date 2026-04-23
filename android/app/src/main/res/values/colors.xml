@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="human_blue">#FF2196F3</color>
+    <color name="human_blue_dark">#FF0D47A1</color>
+    <color name="nonhuman_red">#FFF44336</color>
+    <color name="nonhuman_red_dark">#FFB71C1C</color>
+    <color name="overlay_bg">#CC0A0A0A</color>
+    <color name="uncertain_yellow">#FFFFC107</color>
+</resources>
