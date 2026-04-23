@@ -1,23 +1,29 @@
-# FastKAN Human-vs-NonHuman: Interpretable Binary Vision Classification
+# On-Device FastKAN: Deploying a Kolmogorov-Arnold Network Head on Android
 
 [![W&B](https://img.shields.io/badge/Weights_%26_Biases-FFBE00?logo=weightsandbiases&logoColor=white)](https://wandb.ai)
-[![FastKAN](https://img.shields.io/badge/Fast--KAN-Interpretable-blue)](https://github.com/ZiyaoLi/fast-kan)
+[![FastKAN](https://img.shields.io/badge/Fast--KAN-RBF%20Splines-blue)](https://github.com/ZiyaoLi/fast-kan)
 [![HF Space](https://img.shields.io/badge/🤗%20Space-Live%20Demo-yellow)](https://huggingface.co/spaces/armanmayub/KAN-mobile)
 
-A binary vision classifier using **FastKAN** (Kolmogorov-Arnold Networks) for human/non-human detection. This project compares a standard MLP head against a FastKAN head — both on a frozen MobileNetV2 backbone — with a focus on **interpretability**: KAN learns a unique activation curve per edge that can be visualized and inspected, unlike the fixed activations in a standard MLP.
+The goal of this project is to deploy a **FastKAN** (Kolmogorov-Arnold Network) classification head on an Android device and run it in real time on live camera video. FastKAN replaces standard linear layers with learnable univariate functions approximated using RBF spline weights, making each edge of the network intrinsically interpretable.
 
-> **Note on parameters:** KAN edges carry learnable spline weights (RBF basis functions) in addition to base weights, so the KAN head has significantly more parameters than the MLP head at this input size (1280 features). The comparison here is about **accuracy parity and interpretability**, not parameter count.
+The model uses a frozen **MobileNetV2** backbone (pretrained on ImageNet) paired with a **FastKAN head** for binary human/non-human classification. The KAN head is exported to ONNX with its intermediate 64-dimensional hidden activations exposed, which drive a real-time signal visualizer built into the Android app.
 
-## 🚀 Key Features
-- **Interpretable by design:** Visualize exactly what each KAN edge learned as a univariate function.
-- **Honest A/B comparison:** Same frozen backbone, same data — only the classification head differs.
-- **W&B Tracking:** Full experiment logging — accuracy, loss, F1, precision, recall, mAP, latency.
-- **ONNX export:** Pipeline included for deploying the trained model to edge devices.
+A standard MLP head is included as a baseline for accuracy and latency comparison.
 
-## 🧠 What this project explores
-- **MLP vs. KAN:** Fixed node activations (MLP) vs. learnable edge activation curves (KAN).
-- **RBF Basis:** How FastKAN uses Radial Basis Functions for efficient spline computation.
-- **Interpretability in practice:** What do the learned KAN curves actually look like on real vision features?
+> **Note on parameters:** FastKAN edges carry both base weights and RBF spline weights, so the KAN head has significantly more parameters than the MLP at this input size (1280 backbone features). The comparison is about **on-device deployment and interpretability**, not parameter efficiency.
+
+## Key Features
+- **FastKAN on Android:** Full end-to-end pipeline from training to on-device inference via ONNX Runtime
+- **Live KAN visualizer:** 64 animated bars showing the FastKAN hidden layer activations in real time, color-coded by class confidence
+- **Interpretable activation curves:** Each FastKAN edge learns a visualizable univariate function — exported as PNGs for inspection
+- **Honest A/B comparison:** Same frozen backbone, same data — only the classification head differs
+- **W&B tracking:** Full experiment logging — accuracy, loss, F1, precision, recall, mAP, latency
+
+## What this project explores
+- **FastKAN architecture:** How RBF basis functions approximate spline weights for efficient KAN computation
+- **MLP vs. FastKAN:** Fixed node activations (MLP) vs. learnable edge activation curves (FastKAN)
+- **Mobile deployment:** Exporting a FastKAN model to ONNX and running it on Android with CameraX + ONNX Runtime
+- **Interpretability in practice:** What do the learned FastKAN activation curves look like on real MobileNetV2 vision features?
 
 ## 🛠️ Setup & Execution
 
@@ -110,3 +116,19 @@ python src/onnx_export.py --model-path models/kan_best.pth \
 
 The `hidden` output contains the 64-dimensional activations from the first
 FastKAN layer, used to drive the real-time signal visualizer in the Android app.
+
+## 📱 Android App
+
+The `android/` directory is a complete Android Studio project (minSdk 26).
+
+**Stack:**
+- CameraX 1.3.x — live camera preview + frame analysis
+- ONNX Runtime Android 1.17.0 — on-device FastKAN inference
+- Custom `KANVisualizerView` — 64 lerp-smoothed equalizer bars driven by the FastKAN hidden activations, blue for Human, red for Non-Human
+
+**To build and run:**
+1. Open `android/` in Android Studio
+2. Let Gradle sync (downloads dependencies on first run)
+3. Enable USB Debugging on your Android phone and hit Run
+
+The ONNX model (`kan_model_android.onnx`) is bundled as an asset and loaded at startup. Inference runs entirely on-device — no network calls.
