@@ -17,7 +17,8 @@ def physical_split(source_dir, train_dir, val_dir, split_ratio=0.8):
         os.makedirs(train_cls_path, exist_ok=True)
         os.makedirs(val_cls_path, exist_ok=True)
         
-        files = [f for f in os.listdir(src_cls_path) if f.endswith('.jpg')]
+        IMAGE_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.bmp', '.webp'}
+        files = [f for f in os.listdir(src_cls_path) if os.path.splitext(f.lower())[1] in IMAGE_EXTENSIONS]
         random.seed(42)
         random.shuffle(files)
         
