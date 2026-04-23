@@ -1,4 +1,4 @@
-# On-Device FastKAN: Deploying a Kolmogorov-Arnold Network Head on Android
+# Edge-Deployed KAN: Deploying a Kolmogorov-Arnold Network Head on an Edge Device
 
 [![W&B](https://img.shields.io/badge/Weights_%26_Biases-FFBE00?logo=weightsandbiases&logoColor=white)](https://wandb.ai)
 [![FastKAN](https://img.shields.io/badge/Fast--KAN-RBF%20Splines-blue)](https://github.com/ZiyaoLi/fast-kan)
