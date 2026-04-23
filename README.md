@@ -49,8 +49,48 @@ python src/train.py --config configs/config_kan.yaml
 ### 4. Interactive Analysis
 Open `analysis.ipynb` to compare models and visualize the learned curves.
 
-## 📊 Demo
+## 📊 Results
+
+Both models trained on the same frozen MobileNetV2 backbone (10 epochs, Adam lr=0.001).
+
+| Metric | Baseline (MLP) | KAN |
+|--------|---------------|-----|
+| Trainable params | 2,562 | 741,186 |
+| Best val accuracy | 100.00% | 100.00% |
+| **Test accuracy** | **99.93%** | 99.60% |
+| Test mAP | 1.0000 | 1.0000 |
+| Test F1 | 0.9992 | 0.9958 |
+| Test Precision | 0.9985 | 0.9917 |
+| Test Recall | **1.0000** | **1.0000** |
+| Inference latency | 2.71ms | **1.92ms** |
+| Epochs to 100% val | 9 | **2** |
+
+**Key findings:**
+- KAN matched the baseline within 0.33% test accuracy despite a fundamentally different architecture
+- KAN converged 4× faster (100% val accuracy at epoch 2 vs epoch 9)
+- Both models achieve perfect recall — no human is ever misclassified as non-human
+- KAN is faster at inference (1.92ms vs 2.71ms) due to efficient RBF computation
+
+## 🔍 KAN Interpretability
+
+Unlike MLP weights (uninterpretable scalars), KAN edges learn visualizable univariate functions. Below are the learned activation curves from the final classification layer:
+
+**Human class (Output 0):**
+![KAN curves - Human](results/kan_curves_output_0_human.png)
+
+**Non-Human class (Output 1):**
+![KAN curves - Non-Human](results/kan_curves_output_1_non_human.png)
+
+The Non-Human curves show clear **sigmoid-like step functions** — the model learned sharp thresholds on specific hidden features, revealing the decision logic that a standard MLP cannot expose.
+
+## 🖥️ Demo
 Launch the Gradio interface for live inference:
 ```bash
 python src/demo.py
+```
+
+## 📤 ONNX Export
+Export the trained KAN model for edge deployment:
+```bash
+python src/onnx_export.py --model-path models/kan_best.pth
 ```

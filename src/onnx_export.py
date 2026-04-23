@@ -10,7 +10,7 @@ def export_to_onnx(model_path, output_path="models/kan_model.onnx"):
     
     # Load weights
     try:
-        model.load_state_dict(torch.load(model_path, map_location=device))
+        model.load_state_dict(torch.load(model_path, map_location=device, weights_only=True))
         print(f"Loaded model weights from {model_path}")
     except Exception as e:
         print(f"Failed to load weights: {e}")

@@ -1,6 +1,6 @@
 {
     "model": "kan",
-    "trainable_parameters": null,
+    "trainable_parameters": 741186,
     "best_val_acc": 100.0,
     "best_val_mAP": 1.0,
     "best_val_f1": 1.0,
