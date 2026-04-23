@@ -1,3 +1,4 @@
+import os
 import gradio as gr
 import torch
 from torchvision import transforms
@@ -74,7 +75,10 @@ demo = gr.Interface(
 )
 
 if __name__ == "__main__":
-    # To run this, you'd need the trained model weights
-    # For now, let's load a dummy KAN model for demonstration purposes
-    current_model = load_model('kan')
+    kan_path = 'models/kan_best.pth'
+    baseline_path = 'models/baseline_best.pth'
+    if os.path.exists(kan_path):
+        current_model = load_model('kan', path=kan_path)
+    elif os.path.exists(baseline_path):
+        current_model = load_model('baseline', path=baseline_path)
     demo.launch()

@@ -10,3 +10,4 @@ opencv-python
 pillow
 tqdm
 scikit-learn
+onnx

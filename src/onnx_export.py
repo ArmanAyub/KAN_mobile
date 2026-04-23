@@ -1,5 +1,4 @@
 import torch
-import onnx
 from model import KANClassifier
 
 def export_to_onnx(model_path, output_path="models/kan_model.onnx"):

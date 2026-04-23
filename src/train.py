@@ -10,6 +10,7 @@ from sklearn.metrics import average_precision_score
 from dataset import get_dataloaders
 from model import BaselineClassifier, KANClassifier
 from utils import plot_kan_curves
+import matplotlib.pyplot as plt
 import wandb
 
 def train_one_epoch(model, loader, criterion, optimizer, device, epoch):
@@ -103,8 +104,10 @@ def main(config_path):
         
         if val_acc > best_acc:
             best_acc, best_mAP = val_acc, val_mAP
+            os.makedirs('models', exist_ok=True)
             torch.save(model.state_dict(), f"models/{model_type}_best.pth")
 
+    t_acc = best_acc
     if test_loader:
         model.load_state_dict(torch.load(f"models/{model_type}_best.pth"))
         t_loss, t_acc, t_mAP, t_lat, t_imgs = validate(model, test_loader, criterion, device, 0, log_images=True, mode="Test")

@@ -24,25 +24,18 @@ def plot_kan_curves(model, input_idx=0, output_idx=0, grid_range=(-1, 1), num_po
     x = torch.linspace(grid_range[0], grid_range[1], num_points).to(next(model.parameters()).device)
     
     with torch.no_grad():
-        # FastKAN usually computes: y = base_weight * activation(x) + spline_weight * RBF(x)
-        # We simulate a single input dimension's contribution
-        
-        # 1. Base contribution (usually SiLU/Linear)
-        # Most FastKAN implementations use SiLU as the base activation
+        out_dim, in_dim = kan_layer.base_weight.shape
+        input_idx = min(input_idx, in_dim - 1)
+        output_idx = min(output_idx, out_dim - 1)
+
+        # 1. Base contribution (SiLU)
         base_act = nn.functional.silu(x)
-        # Extract the specific weight for this input-output pair
         w_base = kan_layer.base_weight[output_idx, input_idx]
         y_base = w_base * base_act
-        
-        # 2. Spline/RBF contribution
-        # This is more complex as it involves multiple basis functions
-        # For simplicity in visualization, we can compute the total layer output 
-        # for a "one-hot" style input where only one dimension varies.
-        
-        input_vec = torch.zeros(num_points, kan_layer.input_dim).to(x.device)
+
+        # 2. Total layer output via one-hot style input (vary one dim at a time)
+        input_vec = torch.zeros(num_points, in_dim).to(x.device)
         input_vec[:, input_idx] = x
-        
-        # Get the full output from the layer
         y_total = kan_layer(input_vec)[:, output_idx]
         
     # Plotting
