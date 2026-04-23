@@ -1,20 +1,22 @@
 # FastKAN Human-vs-NonHuman: Interpretable Binary Vision Classification
 
 [![W&B](https://img.shields.io/badge/Weights_%26_Biases-FFBE00?logo=weightsandbiases&logoColor=white)](https://wandb.ai)
-[![FastKAN](https://img.shields.io/badge/Fast--KAN-Efficient-blue)](https://github.com/ZiyaoLi/fast-kan)
+[![FastKAN](https://img.shields.io/badge/Fast--KAN-Interpretable-blue)](https://github.com/ZiyaoLi/fast-kan)
 
-A high-performance binary vision classifier using **FastKAN** (Kolmogorov-Arnold Networks) for human/non-human detection. This project demonstrates KAN's superior interpretability and parameter efficiency compared to traditional MLPs.
+A binary vision classifier using **FastKAN** (Kolmogorov-Arnold Networks) for human/non-human detection. This project compares a standard MLP head against a FastKAN head — both on a frozen MobileNetV2 backbone — with a focus on **interpretability**: KAN learns a unique activation curve per edge that can be visualized and inspected, unlike the fixed activations in a standard MLP.
+
+> **Note on parameters:** KAN edges carry learnable spline weights (RBF basis functions) in addition to base weights, so the KAN head has significantly more parameters than the MLP head at this input size (1280 features). The comparison here is about **accuracy parity and interpretability**, not parameter count.
 
 ## 🚀 Key Features
-- **FastKAN Integration:** Near-real-time inference with KAN's unique learnable activation curves.
-- **W&B Tracking:** Professional experiment logging (accuracy, loss, gradients).
-- **Interpretable Analysis:** A dedicated Jupyter Notebook for visualizing learned KAN functions.
-- **Mobile-Ready:** ONNX export pipeline included for edge deployment.
+- **Interpretable by design:** Visualize exactly what each KAN edge learned as a univariate function.
+- **Honest A/B comparison:** Same frozen backbone, same data — only the classification head differs.
+- **W&B Tracking:** Full experiment logging — accuracy, loss, F1, precision, recall, mAP, latency.
+- **ONNX export:** Pipeline included for deploying the trained model to edge devices.
 
-## 🧠 Learning Highlights (What you'll find in the code)
-- **MLP vs. KAN:** Understanding fixed node activations vs. learnable edge activations.
-- **RBF Basis:** How Fast-KAN uses Radial Basis Functions for speed.
-- **Parameter Efficiency:** Comparative study of model sizes.
+## 🧠 What this project explores
+- **MLP vs. KAN:** Fixed node activations (MLP) vs. learnable edge activation curves (KAN).
+- **RBF Basis:** How FastKAN uses Radial Basis Functions for efficient spline computation.
+- **Interpretability in practice:** What do the learned KAN curves actually look like on real vision features?
 
 ## 🛠️ Setup & Execution
 
@@ -38,10 +40,10 @@ Download the [Human and Not Human Dataset](https://www.kaggle.com/datasets/alias
 ### 3. Training & Tracking
 ```bash
 # Train the Baseline (MLP head)
-python src/train.py --model baseline --epochs 10
+python src/train.py --config configs/config_baseline.yaml
 
 # Train the FastKAN version
-python src/train.py --model kan --epochs 10
+python src/train.py --config configs/config_kan.yaml
 ```
 
 ### 4. Interactive Analysis

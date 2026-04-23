@@ -5,13 +5,13 @@ This document provides a comprehensive overview of the `KAN_mobile` project for 
 ---
 
 ## 🎯 Project Goal
-The goal of this project is to build a highly efficient and interpretable **binary vision classifier** that distinguishes between **Humans** and **Non-Humans**. It specifically explores the use of **Kolmogorov-Arnold Networks (KAN)** as a modern alternative to traditional Multi-Layer Perceptrons (MLPs).
+The goal of this project is to build an **interpretable binary vision classifier** that distinguishes between **Humans** and **Non-Humans**. It compares a standard MLP classification head against a **FastKAN** (Kolmogorov-Arnold Network) head, both mounted on a frozen MobileNetV2 backbone, to evaluate whether KAN can match MLP accuracy while offering greater interpretability.
 
 ## 🧠 Core Technology: Why KAN?
-- **FastKAN Integration:** Uses the `fast-kan` library which employs Radial Basis Functions (RBF) for efficient computation.
-- **Interpretability:** Unlike MLPs with fixed activation functions, KANs have learnable activation functions on the edges, allowing for better visualization of what the model learns.
-- **Efficiency:** KANs often achieve similar or better accuracy than MLPs with fewer parameters.
-- **Architecture:** The project uses a **frozen MobileNetV2 backbone** (pre-trained on ImageNet) and replaces the final classification head with either an MLP (Baseline) or a FastKAN (KAN) layer.
+- **FastKAN Integration:** Uses the `fast-kan` library which employs Radial Basis Functions (RBF) for efficient spline computation.
+- **Interpretability:** Unlike MLPs with fixed activation functions, KANs have learnable activation functions on the edges — each edge learns a univariate curve that can be plotted and inspected.
+- **Parameter note:** At 1280 input features, KAN's spline weights make its head significantly larger than the MLP head. The comparison here is about **accuracy parity and interpretability**, not parameter efficiency.
+- **Architecture:** Frozen MobileNetV2 backbone (pre-trained on ImageNet) with a swappable classification head — MLP for baseline, FastKAN for the interpretable variant.
 
 ## 📁 Project Structure
 
@@ -68,8 +68,8 @@ python src/onnx_export.py --model-path models/kan_best.pth
 ## 📍 Current State
 - **Backbone:** MobileNetV2 is the chosen feature extractor (frozen).
 - **Weights:** Only `models/baseline_best.pth` exists so far. 
-- **Next Steps:** You have successfully trained the baseline (MLP) model. Your next immediate task was likely to **train the KAN-based model** using `python src/train.py --config configs/config_kan.yaml` to compare its accuracy and parameter efficiency against the baseline. 
-- **Goal:** Once the KAN model is trained, you would use the Gradio `demo.py` and the `analysis.ipynb` notebook to visualize the learned curves and evaluate if the model provides more interpretable results for identifying humans.
+- **Next Steps:** Retrain the baseline (clean run with full test evaluation), then train the KAN model using `python src/train.py --config configs/config_kan.yaml`.
+- **Goal:** Once both models are trained, use `analysis.ipynb` to compare accuracy/F1/mAP side-by-side and visualize the learned KAN activation curves. The key question is: does KAN match MLP accuracy, and what do its learned curves reveal about the MobileNetV2 features?
 
 ---
 
